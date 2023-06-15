@@ -1,0 +1,58 @@
+{
+  "name": "pulsar-mqtt-forwarder",
+  "version": "0.0.1",
+  "description": "Forward Apache Pulsar messages to an MQTT broker",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "check-and-build": "npm run ts:check && npm run prettier:check && npm run eslint && npm run test && npm run build",
+    "eslint": "eslint . --max-warnings=0",
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check .",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "ts:check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tvv-lippu-ja-maksujarjestelma-oy/pulsar-mqtt-forwarder.git"
+  },
+  "keywords": [
+    "mqtt",
+    "pulsar"
+  ],
+  "author": "haphut <haphut@mistmap.com>",
+  "license": "EUPL-1.2",
+  "bugs": {
+    "url": "https://github.com/tvv-lippu-ja-maksujarjestelma-oy/pulsar-mqtt-forwarder/issues"
+  },
+  "homepage": "https://github.com/tvv-lippu-ja-maksujarjestelma-oy/pulsar-mqtt-forwarder#readme",
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.1",
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.11",
+    "@typescript-eslint/parser": "^5.59.11",
+    "eslint": "^8.42.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "async-mqtt": "^2.6.3",
+    "pino": "^8.14.1",
+    "pulsar-client": "^1.8.2"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "./dist"
+    ]
+  }
+}
