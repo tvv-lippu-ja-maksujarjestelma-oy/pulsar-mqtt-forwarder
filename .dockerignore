@@ -1,0 +1,12 @@
+# Deny everything.
+**
+
+# Allow these.
+!/LICENSE
+!/src
+!/package.json
+!/package-lock.json
+!/tsconfig.json
+!/.eslintrc.cjs
+!/.eslintignore
+!/.prettierignore
