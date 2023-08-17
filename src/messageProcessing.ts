@@ -17,24 +17,27 @@ const keepProcessingMessages = async (
     nRecentMessages = 0;
   }, 1_000 * logIntervalInSeconds);
 
-  const processPulsarMessage = async (
+  const processPulsarMessage = (
     consumer: Pulsar.Consumer,
     message: Pulsar.Message
   ) => {
     const data = message.getData();
     const properties = message.getProperties();
     const fullTopic = topic + (properties["topicSuffix"] ?? "");
-    await mqttClient.publish(fullTopic, data, publishOptions);
-    nRecentMessages += 1;
-    await consumer.acknowledge(message);
+    // In case of an error, exit via the listener on unhandledRejection.
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    mqttClient.publish(fullTopic, data, publishOptions).then(() => {
+      nRecentMessages += 1;
+      // In case of an error, exit via the listener on unhandledRejection.
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      consumer.acknowledge(message).then(() => {});
+    });
   };
 
   // Errors are handled on the main level.
   /* eslint-disable no-await-in-loop */
   for (;;) {
     const pulsarMessage = await pulsarConsumer.receive();
-    // In case of an error, exit via the listener on unhandledRejection.
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     processPulsarMessage(pulsarConsumer, pulsarMessage);
   }
   /* eslint-enable no-await-in-loop */
