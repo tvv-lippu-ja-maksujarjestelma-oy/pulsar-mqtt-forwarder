@@ -29,7 +29,7 @@
   "homepage": "https://github.com/tvv-lippu-ja-maksujarjestelma-oy/pulsar-mqtt-forwarder#readme",
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.3",
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^29.5.13",
     "@types/node": "^22.7.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
@@ -39,7 +39,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jest": "^28.5.0",
+    "eslint-plugin-jest": "^28.8.3",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^29.7.0",
     "prettier": "^2.8.8",
