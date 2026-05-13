@@ -3,6 +3,8 @@ import type pino from "pino";
 import type Pulsar from "pulsar-client";
 import type { MqttConfig } from "./config";
 
+const PULSAR_RECEIVE_TIMEOUT_MS = 300_000;
+
 const keepProcessingMessages = async (
   logger: pino.Logger,
   pulsarConsumer: Pulsar.Consumer,
@@ -32,18 +34,28 @@ const keepProcessingMessages = async (
   // Errors are handled on the main level.
   /* eslint-disable no-await-in-loop */
   for (;;) {
-    const pulsarMessage = await pulsarConsumer.receive();
-    // To utilize concurrency and to not limit throughput unnecessarily, we
-    // should _not_ await processPulsarMessage. Instead, Promises are handled in
-    // order by Node.js. The Promise will rely on the internal message queue in
-    // mqtt.js and MQTT-over-TCP to ensure that first copies of each MQTT
-    // message with QoS 1 stay in order and that Pulsar messages are
-    // acknowledged in order. Therefore here we can receive the next Pulsar
-    // message right away.
-    //
-    // In case of an error, exit via the listener on unhandledRejection.
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    processPulsarMessage(pulsarConsumer, pulsarMessage);
+    let pulsarMessage: Pulsar.Message | undefined;
+    try {
+      pulsarMessage = await pulsarConsumer.receive(PULSAR_RECEIVE_TIMEOUT_MS);
+    } catch (err) {
+      logger.warn(
+        { err, receiveTimeoutMs: PULSAR_RECEIVE_TIMEOUT_MS },
+        "Pulsar consumer receive failed"
+      );
+    }
+    if (pulsarMessage != null) {
+      // To utilize concurrency and to not limit throughput unnecessarily, we
+      // should _not_ await processPulsarMessage. Instead, Promises are handled in
+      // order by Node.js. The Promise will rely on the internal message queue in
+      // mqtt.js and MQTT-over-TCP to ensure that first copies of each MQTT
+      // message with QoS 1 stay in order and that Pulsar messages are
+      // acknowledged in order. Therefore here we can receive the next Pulsar
+      // message right away.
+      //
+      // In case of an error, exit via the listener on unhandledRejection.
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      processPulsarMessage(pulsarConsumer, pulsarMessage);
+    }
   }
   /* eslint-enable no-await-in-loop */
 };
