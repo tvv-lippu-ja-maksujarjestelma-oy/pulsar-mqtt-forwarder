@@ -8,7 +8,6 @@ const createMqttClient = async (
 ) => {
   logger.info("Connect to MQTT broker");
   // There is a try-catch where this function is called.
-  // eslint-disable-next-line @typescript-eslint/return-await
   return await mqtt.connectAsync(url, clientOptions);
 };
 
