@@ -32,7 +32,6 @@ const keepProcessingMessages = async (
   };
 
   // Errors are handled on the main level.
-  /* eslint-disable no-await-in-loop */
   for (;;) {
     let pulsarMessage: Pulsar.Message | undefined;
     try {
@@ -57,7 +56,6 @@ const keepProcessingMessages = async (
       processPulsarMessage(pulsarConsumer, pulsarMessage);
     }
   }
-  /* eslint-enable no-await-in-loop */
 };
 
 export default keepProcessingMessages;
